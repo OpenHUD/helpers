@@ -48,11 +48,12 @@ const representRange = ({range}) => {
                 low = null;
             }
         }
-    }
-    if (high) {
-        rangeRepresentations.push(representSimpleRange(high, low, 'AKs'));
-        high = null;
-        low = null;
+
+        if (high) {
+            rangeRepresentations.push(representSimpleRange(high, low, 'AKs'));
+            high = null;
+            low = null;
+        }
     }
 
 
@@ -70,11 +71,12 @@ const representRange = ({range}) => {
                 low = null;
             }
         }
-    }
-    if (high) {
-        rangeRepresentations.push(representSimpleRange(high, low, 'AKo'));
-        high = null;
-        low = null;
+
+        if (high) {
+            rangeRepresentations.push(representSimpleRange(high, low, 'AKo'));
+            high = null;
+            low = null;
+        }
     }
 
     return rangeRepresentations.join(',');

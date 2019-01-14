@@ -32,6 +32,11 @@ describe('representRange', () => {
         expect(representRange({range})).to.equal('A5s-A4s');
     });
 
+    it ('supports suited ranges edge case', () => {
+        const range = new Set(['AKs', 'AQs', 'AJs', 'ATs', 'A9s', 'A8s', 'A7s', 'A6s', 'A5s', 'A4s', 'A3s', 'A2s', 'KQs']);
+        expect(representRange({range})).to.equal('A2s+,KQs');
+    });
+
     it ('supports high end off suit hand', () => {
         const range = new Set(['AKo']);
         expect(representRange({range})).to.equal('AKo');
@@ -45,6 +50,11 @@ describe('representRange', () => {
     it ('supports range of off suit hands', () => {
         const range = new Set(['A5o', 'A4o']);
         expect(representRange({range})).to.equal('A5o-A4o');
+    });
+
+    it ('supports off suit ranges edge case', () => {
+        const range = new Set(['AKo', 'AQo', 'AJo', 'ATo', 'A9o', 'A8o', 'A7o', 'A6o', 'A5o', 'A4o', 'A3o', 'A2o', 'KQo']);
+        expect(representRange({range})).to.equal('A2o+,KQo');
     });
 
     it ('supports combination of different hands', () => {
