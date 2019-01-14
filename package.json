@@ -1,6 +1,6 @@
 {
   "name": "@openhud/helpers",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "OpenHUD helpers",
   "main": "dist/index.js",
   "scripts": {
