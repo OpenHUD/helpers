@@ -14,6 +14,17 @@ const numericRanks = {
     '2': 2
 };
 
+const numericSuits = {
+    'd': 3,
+    'h': 2,
+    's': 1,
+    'c': 0
+};
+
+const sortRanksInPlace = ranks => {
+    ranks.sort((a, b) => (numericRanks[b] - numericRanks[a]));
+};
+
 const represent2 = hand => {
     const card1rank = hand[0][0];
     const card2rank = hand[1][0];
@@ -26,16 +37,56 @@ const represent2 = hand => {
 
         const repSuit = (card1suit === card2suit) ? 's' : 'o';
         const ranks = [card1rank, card2rank];
-        ranks.sort((a, b) => (numericRanks[b] - numericRanks[a]));
+        sortRanksInPlace(ranks);
         
         return `${ranks.join('')}${repSuit}`;
     }
+};
+
+const compareRanks = (ranks1, ranks2) => {
+    const length = Math.min(ranks1.length, ranks2.length);
+    for (let i = 0; i < length; ++i) {
+        const diff = numericRanks[ranks2[i]] - numericRanks[ranks1[i]];
+        if (diff !== 0) {
+            return diff;
+        }
+    }
+
+    return ranks2.length - ranks1.length;
+};
+
+const stringifyRanks = ranks => {
+    if (ranks.length < 2) {
+        return ranks.join('');
+    } else {
+        return `(${ranks.join('')})`;
+    }
+};
+
+const represent4 = hand => {
+    const suitedRanks = [ [], [], [], [] ];
+
+    hand.forEach(card => {
+        suitedRanks[numericSuits[card[1]]].push(card[0]);
+    });
+
+    // Sort within suit
+    suitedRanks.forEach(ranks => {
+        sortRanksInPlace(ranks);
+    });
+
+    // Sort between suits
+    suitedRanks.sort(compareRanks);
+
+    return suitedRanks.map(stringifyRanks).join('');
 };
 
 const represent = ({hand}) => {
     switch (hand.length) {
         case 2:
             return represent2(hand);
+        case 4:
+            return represent4(hand);
         default:
             throw Error(`${hand.length} card hand representations are not supported`);
     }
