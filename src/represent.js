@@ -14,11 +14,7 @@ const numericRanks = {
     '2': 2
 };
 
-const represent = ({hand}) => {
-    if (hand.length !== 2) {
-        throw Error(`${hand.length} card hand representations are not supported`);
-    }
-
+const represent2 = hand => {
     const card1rank = hand[0][0];
     const card2rank = hand[1][0];
 
@@ -33,6 +29,15 @@ const represent = ({hand}) => {
         ranks.sort((a, b) => (numericRanks[b] - numericRanks[a]));
         
         return `${ranks.join('')}${repSuit}`;
+    }
+};
+
+const represent = ({hand}) => {
+    switch (hand.length) {
+        case 2:
+            return represent2(hand);
+        default:
+            throw Error(`${hand.length} card hand representations are not supported`);
     }
 };
 
