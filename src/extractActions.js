@@ -1,17 +1,25 @@
+const Monker = {
+    Fold: '0',
+    CheckCall: '1',
+    RaisePot: '2',
+    RaiseAllIn: '3',
+    Raise: p => `4${p.toString().padStart(4, '0')}`,
+    RaiseMin: '5'
+};
+
 const getAction = (seatBefore, seatAfter, pot, lastBet) => {
     if (seatAfter.isFolded) {
-        return '0'; // fold
+        return Monker.Fold;
     } else if (seatAfter.pot <= lastBet) {
-        return '1'; // check or call
+        return Monker.CheckCall;
     } else if (seatAfter.stack === 0) {
-        return '3'; // raise all-in
+        return Monker.RaiseAllIn;
     } else if (seatAfter.pot - lastBet === pot + lastBet - seatBefore.pot) {
-        return '2'; // raise pot
+        return Monker.RaisePot;
     } else {
-        // TODO: '5' - raise-min
+        // TODO: Monker.RaiseMin
 
-        const raisePercentage = Math.round(100 * (seatAfter.pot - lastBet) / (pot + lastBet));
-        return `4${raisePercentage.toString().padStart(4, '0')}`; // raise %
+        return Monker.Raise(Math.round(100 * (seatAfter.pot - lastBet) / (pot + lastBet)));
     }
 };
 
