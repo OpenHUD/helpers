@@ -1,3 +1,19 @@
+// From from https://www.monkerguy.com/help.htm:
+//
+// Monker refers to blinds as chips. In all our sims the SB = 1 Chip.
+// Raise sizes are always additional to the previous bet.
+// Example: Open 3sb, means open 3sb + 2sb(big blind) = 5sb, so open 2.5bb.
+// Example: 3bet 12sb, If the open was to 5sb then the reraise is to 17sb (12+5)
+// Here is the formula Monker uses for raise sizes.
+// (Raise % x (all previous bets + previous bet) + previous bet
+// Example:
+// Blinds 1/2.
+// Open raise 50%
+// 0.50(1+2+2) + 2 = 4.5
+// Raise to 4.5
+// 3bet 75%
+// 0.75(1+2+4.5+4.5) + 4.5 = 13.5
+// 3bet to 13.5
 const Monker = {
     Fold: '0',
     CheckCall: '1',
