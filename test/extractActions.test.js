@@ -63,6 +63,25 @@ describe.only('extractActions', () => {
             })).to.equal('1');
         });
 
+        it ('all-in', () => {
+            expect(extractActions({
+                state1: {
+                    pot: 0,
+                    seats: [
+                        { stack: 199, pot: 1, hasAction: true },
+                        { stack: 198, pot: 2 }
+                    ]
+                },
+                state2: {
+                    pot: 0,
+                    seats: [
+                        { stack: 0, pot: 200 },
+                        { stack: 198, pot: 2, hasAction: true }
+                    ]
+                }
+            })).to.equal('3');
+        });
+
         it ('bet+call', () => {
             expect(extractActions({
                 state1: {
