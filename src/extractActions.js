@@ -1,18 +1,16 @@
-import Actions from './Actions.js';
-
-const getAction = (playerStateBefore, playerStateAfter, pot, lastBet) => {
-    if (playerStateAfter.isFolded) {
+const getAction = (seatBefore, seatAfter, pot, lastBet) => {
+    if (seatAfter.isFolded) {
         return '0'; // fold
     } else {
-        if (playerStateAfter.pot <= lastBet) {
+        if (seatAfter.pot <= lastBet) {
             return '1'; // check or call
-        } else if (playerStateAfter.stack === 0) {
+        } else if (seatAfter.stack === 0) {
             return '3'; // raise all-in
-        } else if (playerStateAfter.pot - lastBet === pot + lastBet - playerStateBefore.pot) {
+        } else if (seatAfter.pot - lastBet === pot + lastBet - seatBefore.pot) {
             return '2'; // raise pot
         } else {
             // TODO: '5' - raise-min
-            const raisePercentage = Math.round(100 * (playerStateAfter.pot - lastBet) / (pot + lastBet));
+            const raisePercentage = Math.round(100 * (seatAfter.pot - lastBet) / (pot + lastBet));
             return `4${raisePercentage.toString().padStart(4, '0')}`;
         }
     }
@@ -20,12 +18,12 @@ const getAction = (playerStateBefore, playerStateAfter, pot, lastBet) => {
 
 const canAct = seat => !seat.isFolded && seat.stack > 0;
 
-// Returns a list of actions that turns state1 to state2.
-// Implementation assumes the two states are different, and reachable with at most one action per player.
+// Returns a list of actions (MonkerSolver style) that transitions state1 to state2, e.g. '2.2.1.0'.
 //
-// State is an object {pot: Int, seats: Array[PlayerState]}
-// SeatState is an object {stack: Int, pot: Int, isFolded: Boolean, hasAction: Boolean}
-// Exactly one SeatState.hasAction = true
+// Assumptions:
+// 1. The two states are different
+// 2. Reaching the second state does not require more than one action per seat
+// 3. Each state has exactly one seat with hasAction === true
 const extractActions = ({state1, state2}) => {
     const actions = [];
 
