@@ -37,7 +37,6 @@ const extractActions = ({state1, state2}) => {
     const pots = state1.seats.map(seat => seat.pot);
     let totalPot = pots.reduce((total, pot) => total + pot, state1.pot);
     let maxBet = Math.max(...pots);
-    
 
     let nextToAct = state1.seats.findIndex(seat => seat.hasAction);
     do {
