@@ -6,5 +6,6 @@ import representRange from './representRange.js';
 import Seats from './Seats.js';
 import Actions from './Actions.js';
 import extractActions from './extractActions.js';
+import branch from './branch.js';
 
-export {represent, distance, position, Positions, representRange, Seats, Actions, extractActions};
+export {represent, distance, position, Positions, representRange, Seats, Actions, extractActions, branch};
