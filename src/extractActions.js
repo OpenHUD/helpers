@@ -1,18 +1,17 @@
 const getAction = (seatBefore, seatAfter, pot, lastBet) => {
     if (seatAfter.isFolded) {
         return '0'; // fold
+    } else if (seatAfter.pot <= lastBet) {
+        return '1'; // check or call
+    } else if (seatAfter.stack === 0) {
+        return '3'; // raise all-in
+    } else if (seatAfter.pot - lastBet === pot + lastBet - seatBefore.pot) {
+        return '2'; // raise pot
     } else {
-        if (seatAfter.pot <= lastBet) {
-            return '1'; // check or call
-        } else if (seatAfter.stack === 0) {
-            return '3'; // raise all-in
-        } else if (seatAfter.pot - lastBet === pot + lastBet - seatBefore.pot) {
-            return '2'; // raise pot
-        } else {
-            // TODO: '5' - raise-min
-            const raisePercentage = Math.round(100 * (seatAfter.pot - lastBet) / (pot + lastBet));
-            return `4${raisePercentage.toString().padStart(4, '0')}`;
-        }
+        // TODO: '5' - raise-min
+
+        const raisePercentage = Math.round(100 * (seatAfter.pot - lastBet) / (pot + lastBet));
+        return `4${raisePercentage.toString().padStart(4, '0')}`; // raise %
     }
 };
 
