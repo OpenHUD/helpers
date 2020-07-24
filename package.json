@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/openhud/openhud-helpers.git"
+    "url": "https://github.com/openhud/helpers.git"
   },
   "keywords": [
     "openhud",
@@ -19,9 +19,9 @@
   "author": "Danny Leshem <dleshem@gmail.com>",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/openhud/openhud-helpers/issues"
+    "url": "https://github.com/openhud/helpers/issues"
   },
-  "homepage": "https://github.com/openhud/openhud-helpers",
+  "homepage": "https://github.com/openhud/helpers",
   "devDependencies": {
     "babel-cli": "^6.18.0",
     "babel-core": "^6.21.0",
