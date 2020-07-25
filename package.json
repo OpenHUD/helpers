@@ -2,11 +2,10 @@
   "name": "@openhud/helpers",
   "version": "1.0.8",
   "description": "OpenHUD helpers",
-  "main": "dist/index.js",
+  "main": "src/index.js",
   "scripts": {
-    "test": "mocha --require @babel/register",
-    "compile": "babel -d dist/ src/",
-    "prepublish": "npm test && npm run compile"
+    "test": "mocha --r esm",
+    "prepublish": "npm test"
   },
   "repository": {
     "type": "git",
@@ -23,11 +22,7 @@
   },
   "homepage": "https://github.com/openhud/helpers",
   "devDependencies": {
-    "@babel/cli": "7.10.5",
-    "@babel/core": "^7.10.5",
-    "@babel/plugin-transform-strict-mode": "^7.10.4",
-    "@babel/preset-env": "^7.10.4",
-    "@babel/register": "^7.10.5",
+    "esm": "^3.2.25",
     "chai": "^4.2.0",
     "mocha": "^8.0.1",
     "lodash": "^4.17.19"
