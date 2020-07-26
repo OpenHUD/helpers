@@ -7,5 +7,6 @@ import Seats from './Seats.js';
 import Actions from './Actions.js';
 import extractActions from './extractActions.js';
 import extractInitialState from './extractInitialState.js';
+import HandHistory from './HandHistory.js';
 
-export { represent, distance, position, Positions, representRange, Seats, Actions, extractActions, extractInitialState };
+export { represent, distance, position, Positions, representRange, Seats, Actions, extractActions, extractInitialState, HandHistory };
