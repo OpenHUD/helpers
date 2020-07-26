@@ -2,7 +2,7 @@ import extractInitialState from '../src/extractInitialState.js';
 import {expect} from 'chai';
 
 describe('extractInitialState', () => {
-    describe('extractInitialState', () => {
+    describe('Heads up', () => {
         it ('button hasn\'t acted yet', () => {
             expect(extractInitialState({
                 state: {
@@ -51,4 +51,58 @@ describe('extractInitialState', () => {
             });
         });        
     });
+
+    describe('Multi-way', () => {
+        it ('nothing happened yet', () => {
+            expect(extractInitialState({
+                state: {
+                    game: {
+                        sb: 0.4
+                    },
+                    pots: [],
+                    seats: [
+                        { stack: 99.6, pot: 0.4 },
+                        { stack: 99, pot: 1 },
+                        { stack: 100, pot: 0, hasAction: true, hasButton: true, isHero: true }
+                    ]
+                }
+            })).to.deep.equal({
+                game: {
+                    sb: 0.4
+                },
+                pots: [],
+                seats: [
+                    { stack: 99.6, pot: 0.4 },
+                    { stack: 99, pot: 1 },
+                    { stack: 100, pot: 0, hasAction: true, hasButton: true, isHero: true }
+                ]
+            });
+        });
+
+        it ('button acted', () => {
+            expect(extractInitialState({
+                state: {
+                    game: {
+                        sb: 0.4
+                    },
+                    pots: [],
+                    seats: [
+                        { stack: 99.6, pot: 0.4, hasAction: true },
+                        { stack: 99, pot: 1 },
+                        { stack: 99, pot: 1, hasButton: true, isHero: true }
+                    ]
+                }
+            })).to.deep.equal({
+                game: {
+                    sb: 0.4
+                },
+                pots: [],
+                seats: [
+                    { stack: 99.6, pot: 0.4 },
+                    { stack: 99, pot: 1 },
+                    { stack: 100, pot: 0, hasAction: true, hasButton: true, isHero: true }
+                ]
+            });
+        });        
+    });    
 });
