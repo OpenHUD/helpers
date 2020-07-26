@@ -1,28 +1,29 @@
+import cloneDeep from 'lodash/cloneDeep';
 
 const extractInitialStateHeadsUp = state => {
-    const { game, pots, seats } = state;
+    const initialState = cloneDeep(state);
 
-    // HACK: assume standard "btn is sb and acts first" scenario
-    const btnSeat = seats.find(seat => seat.hasButton);
-    if (btnSeat.hasAction) {
-        return state;
-    } else {
-        return {
-            game,
-            pots,
-            seats: seats.map(seat => {
-                if (seat.hasButton) {
-                    return { pot: game.sb, stack: seat.pot + seat.stack - game.sb, hasButton: true, hasAction: true, isHero: !!seat.isHero }; 
-                } else {
-                    return { pot: seat.pot, stack: seat.stack, isHero: !!seat.isHero };
-                }
-            })
-        };
-    }
+    initialState.seats.forEach(seat => {
+        if (seat.hasButton) {
+            if (!seat.hasAction) {
+                seat.hasAction = true;
+                seat.pot = state.game.sb;
+                seat.stack = seat.pot + seat.stack - state.game.sb;
+            }
+        } else {
+            if (seat.hasAction) {
+                delete seat.hasAction;
+            }
+        }
+    });
+
+    return initialState;
 };
 
-// TODO: implement
-const extractInitialStateMultiWay = state => state;
+const extractInitialStateMultiWay = state => {
+//    const { game, pots, seats } = state;
+    return state;
+};
 
 // Returns the game state before any strategic action.
 //

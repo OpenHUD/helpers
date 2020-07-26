@@ -45,7 +45,7 @@ describe('extractInitialState', () => {
                 },
                 pots: [],
                 seats: [
-                    { stack: 99.6, pot: 0.4, hasAction: true, hasButton: true, isHero: false },
+                    { stack: 99.6, pot: 0.4, hasAction: true, hasButton: true },
                     { stack: 99, pot: 1, isHero: true }
                 ]
             });
