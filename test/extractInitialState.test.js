@@ -79,7 +79,7 @@ describe('extractInitialState', () => {
             });
         });
 
-        it ('button acted', () => {
+        it ('button called', () => {
             expect(extractInitialState({
                 state: {
                     game: {
@@ -90,6 +90,32 @@ describe('extractInitialState', () => {
                         { stack: 99.6, pot: 0.4, hasAction: true },
                         { stack: 99, pot: 1 },
                         { stack: 99, pot: 1, hasButton: true, isHero: true }
+                    ]
+                }
+            })).to.deep.equal({
+                game: {
+                    sb: 0.4
+                },
+                pots: [],
+                seats: [
+                    { stack: 99.6, pot: 0.4 },
+                    { stack: 99, pot: 1 },
+                    { stack: 100, pot: 0, hasAction: true, hasButton: true, isHero: true }
+                ]
+            });
+        });
+
+        it ('button folded', () => {
+            expect(extractInitialState({
+                state: {
+                    game: {
+                        sb: 0.4
+                    },
+                    pots: [],
+                    seats: [
+                        { stack: 99.6, pot: 0.4, hasAction: true },
+                        { stack: 99, pot: 1 },
+                        { stack: 100, pot: 0, hasButton: true, isHero: true, isFolded: true }
                     ]
                 }
             })).to.deep.equal({

@@ -4,6 +4,8 @@ const extractInitialStateHeadsUp = state => {
     const initialState = cloneDeep(state);
 
     initialState.seats.forEach(seat => {
+        delete seat.isFolded;
+
         if (seat.hasButton) {
             if (!seat.hasAction) {
                 seat.hasAction = true;
@@ -29,6 +31,8 @@ const extractInitialStateMultiWay = state => {
     const firstToActIndex = (bbIndex + 1) % state.seats.length;
 
     initialState.seats.forEach((seat, index) => {
+        delete seat.isFolded;
+
         if (index === sbIndex) {
             delete seat.hasAction;
             seat.stack += seat.pot - state.game.sb;
