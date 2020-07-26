@@ -1,7 +1,7 @@
 import extractActions from '../src/extractActions.js';
 import {expect} from 'chai';
 
-describe.only('extractActions', () => {
+describe('extractActions', () => {
     describe('actions', () => {
         it ('bet', () => {
             expect(extractActions({
