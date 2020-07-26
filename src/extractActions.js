@@ -1,3 +1,5 @@
+import isEqual from 'lodash/isEqual';
+
 // From from https://www.monkerguy.com/help.htm:
 //
 // Monker refers to blinds as chips. In all our sims the SB = 1 Chip.
@@ -48,6 +50,10 @@ const canAct = seat => !seat.isFolded && seat.stack > 0;
 // 2. Reaching the second state does not require more than one action per seat
 // 3. Each state has exactly one seat with hasAction === true
 const extractActions = ({state1, state2}) => {
+    if (isEqual(state1, state2)) {
+        return '';
+    }
+
     const actions = [];
 
     const pots = state1.seats.map(seat => seat.pot);

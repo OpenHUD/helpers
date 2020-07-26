@@ -144,6 +144,25 @@ describe('extractActions', () => {
     });
 
     describe('behavior', () => {
+        it ('treats identical states as no-action', () => {
+            expect(extractActions({
+                state1: {
+                    pots: [],
+                    seats: [
+                        { stack: 199, pot: 1, hasAction: true },
+                        { stack: 198, pot: 2 }
+                    ]
+                },
+                state2: {
+                    pots: [],
+                    seats: [
+                        { stack: 199, pot: 1, hasAction: true },
+                        { stack: 198, pot: 2 }
+                    ]
+                }
+            })).to.equal('');
+        });
+
         it ('wraparound', () => {
             expect(extractActions({
                 state1: {
