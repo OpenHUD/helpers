@@ -179,19 +179,19 @@ describe('HandHistory', () => {
         expect(handHistory.currentHand.actions).to.equal('1');
     });
 
-    it('updates the actions if the previous player was all-in and the action is back to us', () => {
+    it('Updates the actions if the previous player was all-in and the action is back to us', () => {
         const handHistory = new HandHistory();
 
         handHistory.updateState({
             state: {
                 game: {
-                    sb: 1
+                    sb: 0.5
                 },
                 pots: [],
                 seats: [
+                    {pot: 0.5, stack: 99.5},
                     {pot: 1, stack: 99},
-                    {pot: 2, stack: 98},
-                    {pot: 5, stack: 0},
+                    {pot: 2.5, stack: 0},
                     {pot: 0, stack: 100, isHero: true, hasButton: true, hasAction: true},
                 ]
             }
@@ -201,17 +201,37 @@ describe('HandHistory', () => {
         handHistory.updateState({
             state: {
                 game: {
-                    sb: 1
+                    sb: 0.5
                 },
                 pots: [],
                 seats: [
-                    {pot: 1, stack: 99, isFolded: true},
-                    {pot: 21, stack: 79},
-                    {pot: 5, stack: 0},
-                    {pot: 5, stack: 95, isHero: true, hasButton: true, hasAction: true},
+                    {pot: 0.5, stack: 99.5, isFolded: true},
+                    {pot: 10.5, stack: 89.5},
+                    {pot: 2.5, stack: 0},
+                    {pot: 2.5, stack: 97.5, isHero: true, hasButton: true, hasAction: true},
                 ]
             }
         });
         expect(handHistory.currentHand.actions).to.equal('3.1.0.2');
+    });
+
+    it('Correctly accounts for non full pot bets', () => {
+        const handHistory = new HandHistory();
+
+        handHistory.updateState({
+            state: {
+                game: {
+                    sb: 0.5
+                },
+                pots: [],
+                seats: [
+                    {pot: 0.5, stack: 99.5},
+                    {pot: 1, stack: 99},
+                    {pot: 3, stack: 96.5},
+                    {pot: 0, stack: 100, isHero: true, hasButton: true, hasAction: true},
+                ]
+            }
+        });
+        expect(handHistory.currentHand.actions).to.equal('40080');
     });
 });

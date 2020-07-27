@@ -79,6 +79,34 @@ describe('extractInitialState', () => {
             });
         });
 
+        it ('one raise', () => {
+            expect(extractInitialState({
+                state: {
+                    game: {
+                        sb: 0.5
+                    },
+                    pots: [],
+                    seats: [
+                        {pot: 0.5, stack: 99.5},
+                        {pot: 1, stack: 99},
+                        {pot: 3.5, stack: 96.5},
+                        {pot: 0, stack: 100, isHero: true, hasButton: true, hasAction: true},
+                    ]
+                }
+            })).to.deep.equal({
+                game: {
+                    sb: 0.5
+                },
+                pots: [],
+                seats: [
+                    {pot: 0.5, stack: 99.5},
+                    {pot: 1, stack: 99},
+                    {pot: 0, stack: 100, hasAction: true},
+                    {pot: 0, stack: 100, isHero: true, hasButton: true},
+                ]
+            });
+        });
+
         it ('button called', () => {
             expect(extractInitialState({
                 state: {
