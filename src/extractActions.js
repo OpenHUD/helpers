@@ -6,7 +6,7 @@ import isEqual from 'lodash/isEqual';
 // Raise sizes are always additional to the previous bet.
 // Example: Open 3sb, means open 3sb + 2sb(big blind) = 5sb, so open 2.5bb.
 // Example: 3bet 12sb, If the open was to 5sb then the reraise is to 17sb (12+5)
-// Here is the formula Monker uses for raise sizes.
+// Here is the formula Monker uses for raise `sizes.
 // (Raise % x (all previous bets + previous bet) + previous bet
 // Example:
 // Blinds 1/2.
@@ -42,13 +42,14 @@ const getAction = (seatBefore, seatAfter, pot, lastBet) => {
 };
 
 const canAct = seat => !seat.isFolded && seat.stack > 0;
+const nextPlayer = (seats, index) => (index + 1) % seats.length;
+const prevPlayer = (seats, index) => (index + seats.length - 1) % seats.length;
 
 // Returns a list of actions (MonkerSolver style) that transitions state1 to state2, e.g. '2.2.1.0'.
 //
 // Assumptions:
-// 1. The two states are different
-// 2. Reaching the second state does not require more than one action per seat
-// 3. Each state has exactly one seat with hasAction === true
+// 1. Reaching the second state does not require more than one action per seat
+// 2. Each state has exactly one seat with hasAction === true
 const extractActions = ({state1, state2}) => {
     if (isEqual(state1, state2)) {
         return '';
@@ -61,6 +62,12 @@ const extractActions = ({state1, state2}) => {
     let maxBet = Math.max(...pots);
 
     let nextToAct = state1.seats.findIndex(seat => seat.hasAction);
+    if (state2.seats[nextToAct].hasAction) { // check if the two states are indeed different by looking at the pot in front of prev player
+        const lastActed = prevPlayer(state1.seats, nextToAct);
+        if (state1.seats[lastActed].pot === state2.seats[lastActed].pot) {
+            return '';
+        }
+    }
     do {
         const seatBefore = state1.seats[nextToAct];
         const seatAfter = state2.seats[nextToAct];
@@ -72,7 +79,7 @@ const extractActions = ({state1, state2}) => {
             maxBet = Math.max(maxBet, seatAfter.pot);
         }
 
-        nextToAct = (nextToAct + 1) % state1.seats.length;
+        nextToAct = nextPlayer(state1.seats, nextToAct);
     } while (!state2.seats[nextToAct].hasAction);
 
     return actions.join('.');

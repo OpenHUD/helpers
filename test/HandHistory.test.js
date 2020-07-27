@@ -81,4 +81,53 @@ describe('HandHistory', () => {
         });
         expect(handHistory.actions).to.equal('0.0');    
     });
+
+    it ('stays the same if updated twice with meaningless differences in the state', () => {
+        const handHistory = new HandHistory({
+            state: {
+                game: {
+                    sb: 0.4
+                },
+                pots: [],
+                seats: [
+                    { pot: 0.4, stack: 99.6 },
+                    { pot: 1, stack: 99 },
+                    { pot: 0, stack: 100, isHero: true, hasAction: true },
+                    { pot: 0, stack: 100, hasButton: true },
+                ]
+            }
+        });
+
+        handHistory.updateState({
+            state: {
+                game: {
+                    sb: 0.4
+                },
+                pots: [],
+                seats: [
+                    { pot: 0.4, stack: 99.6, name: 'foo' },
+                    { pot: 1, stack: 99 },
+                    { pot: 1, stack: 99, isHero: true, isFolded: false },
+                    { pot: 0, stack: 100, hasButton: true, hasAction: true },
+                ]
+            }
+        });
+        expect(handHistory.actions).to.equal('1');
+
+        handHistory.updateState({
+            state: {
+                game: {
+                    sb: 0.4
+                },
+                pots: [],
+                seats: [
+                    { pot: 0.4, stack: 99.6, name: 'bar' },
+                    { pot: 1, stack: 99 },
+                    { pot: 1, stack: 99, isHero: true, isFolded: false },
+                    { pot: 0, stack: 100, hasButton: true, hasAction: true },
+                ]
+            }
+        });
+        expect(handHistory.actions).to.equal('1');
+    });
 });
