@@ -126,8 +126,11 @@ describe('HandHistory', () => {
 
         expect(hand1.id).to.not.equal(hand2.id);
     });
+
     it ('stays the same if updated twice with meaningless differences in the state', () => {
-        const handHistory = new HandHistory({
+        const handHistory = new HandHistory();
+
+        handHistory.updateState({
             state: {
                 game: {
                     sb: 0.4
@@ -141,7 +144,6 @@ describe('HandHistory', () => {
                 ]
             }
         });
-
         handHistory.updateState({
             state: {
                 game: {
@@ -156,7 +158,8 @@ describe('HandHistory', () => {
                 ]
             }
         });
-        expect(handHistory.actions).to.equal('1');
+
+        expect(handHistory.currentHand.actions).to.equal('1');
 
         handHistory.updateState({
             state: {
@@ -172,6 +175,7 @@ describe('HandHistory', () => {
                 ]
             }
         });
-        expect(handHistory.actions).to.equal('1');
+
+        expect(handHistory.currentHand.actions).to.equal('1');
     });
 });
