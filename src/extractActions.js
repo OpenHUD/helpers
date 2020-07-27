@@ -36,19 +36,27 @@ const getAction = (seatBefore, seatAfter, pot, lastBet) => {
         return Monker.RaisePot;
     } else {
         // TODO: Monker.RaiseMin
-
         return Monker.Raise(Math.round(100 * (seatAfter.pot - lastBet) / (pot + lastBet)));
     }
 };
 
 const canAct = seat => !seat.isFolded && seat.stack > 0;
+const nextPlayer = (seats, index) => (index + 1) % seats.length;
+const prevPlayer = (seats, index) => (index + seats.length - 1) % seats.length;
+
+const getLastActedPlayer = (seats, nextToAct) => {
+    let idx = nextToAct;
+    do {
+        idx = prevPlayer(seats, idx);
+    } while (!canAct(seats[idx]));
+    return idx;
+}
 
 // Returns a list of actions (MonkerSolver style) that transitions state1 to state2, e.g. '2.2.1.0'.
 //
 // Assumptions:
-// 1. The two states are different
-// 2. Reaching the second state does not require more than one action per seat
-// 3. Each state has exactly one seat with hasAction === true
+// 1. Reaching the second state does not require more than one action per seat
+// 2. Each state has exactly one seat with hasAction === true
 const extractActions = ({state1, state2}) => {
     if (isEqual(state1, state2)) {
         return '';
@@ -57,10 +65,17 @@ const extractActions = ({state1, state2}) => {
     const actions = [];
 
     const pots = state1.seats.map(seat => seat.pot);
-    let totalPot = pots.reduce((total, pot) => total + pot, state1.pot);
+    const mainPots = state1.pots ? state1.pots.reduce((total, pot) => total + pot, 0) : 0;
+    let totalPot = pots.reduce((total, pot) => total + pot, mainPots);
     let maxBet = Math.max(...pots);
 
     let nextToAct = state1.seats.findIndex(seat => seat.hasAction);
+    if (state2.seats[nextToAct].hasAction) { // check if the two states are indeed different by looking at the pot in front of prev player
+        const lastActed = getLastActedPlayer(state1.seats, nextToAct);
+        if (state1.seats[lastActed].pot === state2.seats[lastActed].pot) {
+            return '';
+        }
+    }
     do {
         const seatBefore = state1.seats[nextToAct];
         const seatAfter = state2.seats[nextToAct];
@@ -72,7 +87,7 @@ const extractActions = ({state1, state2}) => {
             maxBet = Math.max(maxBet, seatAfter.pot);
         }
 
-        nextToAct = (nextToAct + 1) % state1.seats.length;
+        nextToAct = nextPlayer(state1.seats, nextToAct);
     } while (!state2.seats[nextToAct].hasAction);
 
     return actions.join('.');
