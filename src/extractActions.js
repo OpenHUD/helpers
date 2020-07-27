@@ -36,7 +36,6 @@ const getAction = (seatBefore, seatAfter, pot, lastBet) => {
         return Monker.RaisePot;
     } else {
         // TODO: Monker.RaiseMin
-
         return Monker.Raise(Math.round(100 * (seatAfter.pot - lastBet) / (pot + lastBet)));
     }
 };
@@ -44,6 +43,14 @@ const getAction = (seatBefore, seatAfter, pot, lastBet) => {
 const canAct = seat => !seat.isFolded && seat.stack > 0;
 const nextPlayer = (seats, index) => (index + 1) % seats.length;
 const prevPlayer = (seats, index) => (index + seats.length - 1) % seats.length;
+
+const getLastActedPlayer = (seats, nextToAct) => {
+    let idx = nextToAct;
+    do {
+        idx = prevPlayer(seats, idx);
+    } while (!canAct(seats[idx]));
+    return idx;
+}
 
 // Returns a list of actions (MonkerSolver style) that transitions state1 to state2, e.g. '2.2.1.0'.
 //
@@ -58,12 +65,13 @@ const extractActions = ({state1, state2}) => {
     const actions = [];
 
     const pots = state1.seats.map(seat => seat.pot);
-    let totalPot = pots.reduce((total, pot) => total + pot, state1.pot);
+    const mainPots = state1.pots ? state1.pots.reduce((total, pot) => total + pot, 0) : 0;
+    let totalPot = pots.reduce((total, pot) => total + pot, mainPots);
     let maxBet = Math.max(...pots);
 
     let nextToAct = state1.seats.findIndex(seat => seat.hasAction);
     if (state2.seats[nextToAct].hasAction) { // check if the two states are indeed different by looking at the pot in front of prev player
-        const lastActed = prevPlayer(state1.seats, nextToAct);
+        const lastActed = getLastActedPlayer(state1.seats, nextToAct);
         if (state1.seats[lastActed].pot === state2.seats[lastActed].pot) {
             return '';
         }
