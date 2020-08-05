@@ -8,7 +8,7 @@
  * @param box2
  * @returns {boolean|iff box2 is inside box1}
  */
-const is_in = (box1, box2) => {
+const isIn = (box1, box2) => {
     // Axis aligned boxex
     let box1_minx = Math.min(...box1.map(d => d['x']));
     let box2_minx = Math.min(...box2.map(d => d['x']));
@@ -42,14 +42,14 @@ const union = (box1, box2) => {
  * @param box
  * @returns {boolean|iff the top of "box" is under "point"}
  */
-const is_under = (point, box) => {
+const isUnder = (point, box) => {
     let minx = Math.min(...box.map(d => d['x']));
     let maxx = Math.max(...box.map(d => d['x']));
     let miny = Math.min(...box.map(d => d['y']));
     return miny > point['y'] && minx <= point['x'] && maxx >= point['x'];
 };
 
-const get_center = (box) => {
+const getCenter = (box) => {
     let minx = Math.min(...box.map(d => d['x']));
     let maxx = Math.max(...box.map(d => d['x']));
     let miny = Math.min(...box.map(d => d['y']));
@@ -75,7 +75,7 @@ const height = (box) => {
 /***
  * Calculate the minimum distance between two boxes, or return 0 if the boxes intersect or adjacent.
  */
-const min_distance = (box1, box2) => {
+const minDistance = (box1, box2) => {
     let union_box = union(box1, box2);
     let inner_width = Math.max(0, width(union_box) - width(box1) - width(box2));
     let inner_height = Math.max(0, height(union_box) - height(box1) - height(box2));
@@ -87,9 +87,9 @@ const min_distance = (box1, box2) => {
  * @param box1
  * @param box2
  */
-const center_distance = (box1, box2) => {
-    const b1_center = get_center(box1);
-    const b2_center = get_center(box2);
+const centerDistance = (box1, box2) => {
+    const b1_center = getCenter(box1);
+    const b2_center = getCenter(box2);
     return Math.sqrt((b1_center.x - b2_center.x)**2 + (b1_center.y - b2_center.y)**2);
 };
 
@@ -99,7 +99,7 @@ const center_distance = (box1, box2) => {
  * input is seat centers.
  * @param hero
  */
-const is_closer_to_hero = (hero, seat1, seat2) => {
+const isCloserToHero = (hero, seat1, seat2) => {
     if (seat1['x'] <= hero['x']) {
         if (seat2['x'] > hero['x']) {
             return -1;
@@ -157,11 +157,22 @@ const iou = (box1, box2) => {
  * @param width
  * @param height
  */
-const normalize_vertices = (box, width, height) => {
+const normalizeVertices = (box, width, height) => {
     return box.map(v => ({
         x: v['x'] / width,
         y: v['y'] / height
     }));
 };
 
-export default { normalize_vertices, iou, is_closer_to_hero, center_distance, get_center, min_distance, union, is_in, is_under, width, height };
+/***
+ * Convert a box from {top, left, width, height} to [{x,y},{x,y}]
+ * @param box
+ */
+const covertBoxToAbsoluteFormat = (box) => {
+    return [
+        {x: box['left'], y: box['top']},
+        {x: box['left'] + box['width'], y: box['top'] + box['height']}
+    ]
+}
+
+export default { normalizeVertices, iou, isCloserToHero, centerDistance, getCenter, minDistance, union, isIn, isUnder, width, height, covertBoxToAbsoluteFormat };
