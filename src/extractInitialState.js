@@ -5,17 +5,15 @@ const extractInitialStateHeadsUp = state => {
 
     initialState.seats.forEach(seat => {
         delete seat.isFolded;
+        delete seat.hasAction;
 
         if (seat.hasButton) {
-            if (!seat.hasAction) {
-                seat.hasAction = true;
-                seat.stack += seat.pot - state.game.sb;
-                seat.pot = state.game.sb;
-            }
+            seat.hasAction = true;
+            seat.stack += seat.pot - state.game.sb;
+            seat.pot = state.game.sb;
         } else {
-            if (seat.hasAction) {
-                delete seat.hasAction;
-            }
+            seat.stack += seat.pot - 1;
+            seat.pot = 1;
         }
     });
 
@@ -32,17 +30,15 @@ const extractInitialStateMultiWay = state => {
 
     initialState.seats.forEach((seat, index) => {
         delete seat.isFolded;
+        delete seat.hasAction;
 
         if (index === sbIndex) {
-            delete seat.hasAction;
             seat.stack += seat.pot - state.game.sb;
             seat.pot = state.game.sb;
         } else if (index === bbIndex) {
-            delete seat.hasAction;
             seat.stack += seat.pot - 1;
             seat.pot = 1;
         } else {
-            delete seat.hasAction;
             if (index === firstToActIndex) {
                 seat.hasAction = true;
             }
