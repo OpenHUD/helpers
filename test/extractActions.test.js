@@ -1,5 +1,5 @@
 import extractActions from '../src/extractActions.js';
-import {expect} from 'chai';
+import {expect, assert} from 'chai';
 
 describe('extractActions', () => {
     describe('actions', () => {
@@ -144,6 +144,30 @@ describe('extractActions', () => {
     });
 
     describe('behavior', () => {
+        it ('gracefully fails when no one has action in latest state', () => {
+            try {
+                extractActions({
+                    state1: {
+                        pots: [],
+                        seats: [
+                            { stack: 99.5, pot: 0.5, hasButton: true, hasAction: true },
+                            { stack: 99, pot: 1 }
+                        ]
+                    },
+                    state2: {
+                        pots: [],
+                        seats: [
+                            { stack: 99, pot: 1, hasButton: true },
+                            { stack: 99, pot: 1 }
+                        ]
+                    }
+                });
+                assert.fail('Expected exception');
+            } catch (e) {
+                // Expected exception
+            }
+        });
+
         it ('treats identical states as no-action', () => {
             expect(extractActions({
                 state1: {

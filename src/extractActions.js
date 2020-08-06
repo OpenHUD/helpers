@@ -1,4 +1,5 @@
 import isEqual from 'lodash/isEqual';
+import some from 'lodash/some';
 
 // From from https://www.monkerguy.com/help.htm:
 //
@@ -60,6 +61,9 @@ const getLastActedPlayer = (seats, nextToAct) => {
 const extractActions = ({state1, state2}) => {
     if (isEqual(state1, state2)) {
         return '';
+    }
+    if (!some(state2.seats, 'hasAction')) {
+        throw new Error('No player in has action');
     }
 
     const actions = [];
