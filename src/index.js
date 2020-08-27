@@ -9,5 +9,6 @@ import extractActions from './extractActions.js';
 import extractInitialState from './extractInitialState.js';
 import HandHistory from './HandHistory.js';
 import geometry from './geometry.js';
+import addEmptySeats from './addEmptySeats.js';
 
-export { represent, distance, position, Positions, representRange, Seats, Actions, extractActions, extractInitialState, HandHistory, geometry };
+    export { represent, distance, position, Positions, representRange, Seats, Actions, extractActions, extractInitialState, HandHistory, geometry, addEmptySeats };
