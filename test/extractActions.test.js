@@ -145,7 +145,7 @@ describe('extractActions', () => {
 
     describe('behavior', () => {
         it ('gracefully fails when no one has action in latest state', () => {
-            try {
+            expect(() => {
                 extractActions({
                     state1: {
                         pots: [],
@@ -162,10 +162,7 @@ describe('extractActions', () => {
                         ]
                     }
                 });
-                assert.fail('Expected exception');
-            } catch (e) {
-                // Expected exception
-            }
+            }).to.throw();
         });
 
         it ('treats identical states as no-action', () => {
@@ -248,6 +245,53 @@ describe('extractActions', () => {
                     ]
                 }
             })).to.equal('2');
-         });        
+        });
+
+        it ('gracefully fails when the states have different number of seats', () => {
+            expect(() => {
+                extractActions({
+                    state1: {
+                        pots: [],
+                        seats: [
+                            { stack: 100, pot: 0, hasButton: true, hasAction: true },
+                            { stack: 99.5, pot: 0.5 },
+                            { stack: 99, pot: 1 }
+                        ]
+                    },
+                    state2: {
+                        pots: [],
+                        seats: [
+                            { stack: 100, pot: 0, hasButton: true, hasAction: true },
+                            { stack: 99.5, pot: 0.5 },
+                            { stack: 99, pot: 1 },
+                            { stack: 99, pot: 1 }
+                        ]
+                    }
+                });
+            }).to.throw();
+        });
+
+        it ('gracefully fails when state2 is not reachable from state1', () => {
+            expect(() => {
+                extractActions({
+                    state1: {
+                        pots: [],
+                        seats: [
+                            { stack: 100, pot: 0, hasButton: true, hasAction: true },
+                            { stack: 99.5, pot: 0.5 },
+                            { stack: 99, pot: 1 }
+                        ]
+                    },
+                    state2: {
+                        pots: [],
+                        seats: [
+                            { stack: 100, pot: 0, hasButton: true, hasAction: true },
+                            { stack: 99.5, pot: 0.5 },
+                            { stack: 100, pot: 0 }
+                        ]
+                    }
+                });
+            }).to.throw();
+        });
     });
 });

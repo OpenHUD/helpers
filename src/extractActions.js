@@ -1,5 +1,6 @@
 import isEqual from 'lodash/isEqual';
 import some from 'lodash/some';
+import zip from 'lodash/zip';
 
 // From from https://www.monkerguy.com/help.htm:
 //
@@ -53,17 +54,34 @@ const getLastActedPlayer = (seats, nextToAct) => {
     return idx;
 }
 
+const verifyStates = (state1, state2) => {
+    const seats1 = state1.seats;
+    const seats2 = state2.seats;
+
+    if (seats1.length !== seats2.length) {
+        throw new Error('Different number of seats');
+    }
+
+    zip(seats1, seats2).forEach(([seat1, seat2]) => {
+        if (seat1.pot > seat2.pot) {
+            throw new Error('A seat has less in pot than previously');
+        }
+    });
+};
+
 // Returns a list of actions (MonkerSolver style) that transitions state1 to state2, e.g. '2.2.1.0'.
 //
 // Assumptions:
 // 1. Reaching the second state does not require more than one action per seat
 // 2. Each state has exactly one seat with hasAction === true
 const extractActions = ({state1, state2}) => {
+    verifyStates(state1, state2);
+
     if (isEqual(state1, state2)) {
         return '';
     }
     if (!some(state2.seats, 'hasAction')) {
-        throw new Error('No player in has action');
+        throw new Error('No player has action');
     }
 
     const actions = [];
