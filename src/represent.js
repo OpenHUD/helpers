@@ -63,7 +63,7 @@ const stringifyRanks = ranks => {
     }
 };
 
-const represent4 = hand => {
+const representMany = hand => {
     const suitedRanks = [ [], [], [], [] ];
 
     hand.forEach(card => {
@@ -85,8 +85,9 @@ const represent = ({hand}) => {
     switch (hand.length) {
         case 2:
             return represent2(hand);
+        case 3:
         case 4:
-            return represent4(hand);
+            return representMany(hand);
         default:
             throw Error(`${hand.length} card hand representations are not supported`);
     }

@@ -65,4 +65,39 @@ describe('represent', () => {
             expect(represent({hand})).to.equal('(AK8)A');
         });
     });    
+
+
+    describe('3 cards', () => {
+        it ('supports rainbow hands', () => {
+            const hand = ['As', 'Ad', 'Ac'];
+            expect(represent({hand})).to.equal('AAA');
+        });
+
+        it ('supportd two suit hands', () => {
+            const hand = ['Ks', 'As', 'Kd'];
+            expect(represent({hand})).to.equal('(AK)K');
+        });
+
+        it ('supports monotone hands', () => {
+            const hand = ['8s', 'Ks', 'As'];
+            expect(represent({hand})).to.equal('(AK8)');
+        });
+
+        it ('correctly orders suits in rainbow hands', () => {
+            const hand = ['2s', 'Ad', 'Tc'];
+            expect(represent({hand})).to.equal('AT2');
+        });
+
+        it ('correctly orders suits in two suit hands', () => {
+            const hand = ['Kd', 'Tc', 'Kc'];
+            expect(represent({hand})).to.equal('(KT)K');
+        });
+
+        it ('correctly orders suits in monotone hands', () => {
+            const hand = ['8s', 'As', 'Ks'];
+            expect(represent({hand})).to.equal('(AK8)');
+        });
+    });    
+
+
 });
